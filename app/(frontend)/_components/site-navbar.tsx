@@ -22,7 +22,6 @@ import { NavLogo } from "./nav-logo";
 
 export function SiteNavbar() {
   const session = useSession();
-  console.log(session.data);
   return (
     <motion.header
       initial={{ y: -16, opacity: 0 }}
