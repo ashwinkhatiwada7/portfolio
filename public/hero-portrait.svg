@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none">
+  <rect width="400" height="500" fill="#7c3aed"/>
+  <rect width="400" height="500" fill="url(#g)" opacity="0.9"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="400" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7c3aed"/>
+      <stop offset="0.5" stop-color="#a78bfa"/>
+      <stop offset="1" stop-color="#c4b5fd"/>
+    </linearGradient>
+  </defs>
+  <circle cx="200" cy="175" r="72" fill="white" fill-opacity="0.25"/>
+  <ellipse cx="200" cy="380" rx="110" ry="95" fill="white" fill-opacity="0.2"/>
+  <text x="200" y="460" text-anchor="middle" fill="white" fill-opacity="0.85" font-family="system-ui,sans-serif" font-size="28" font-weight="600">AK</text>
+</svg>

@@ -1,0 +1,120 @@
+---
+description: Next.js App Router folder structure, naming, and module colocation for this portfolio
+alwaysApply: true
+---
+
+# Project folder structure
+
+Use App Router with TypeScript. Keep route files thin; colocate feature code under each route module in `app/(frontend)/`.
+
+## Top level
+
+```
+app/                    # routes only
+  layout.tsx            # root: fonts, metadata, globals
+  (frontend)/           # public site (navbar + footer layout)
+  (auth)/               # login, signup
+  (admin)/              # admin shell
+components/
+  ui/                   # shadcn + global shared UI
+  magicui/              # Magic UI components
+  home/                 # home-only shared pieces (hero, scroll-to-hash)
+lib/                    # site-wide utils (nav-links, utils.ts)
+public/                 # static assets
+```
+
+## Route groups
+
+| Group | Purpose |
+|-------|---------|
+| `(frontend)/` | Portfolio pages with `SiteNavbar` + `SiteFooter` |
+| `(auth)/` | Auth pages (no site shell) |
+| `(admin)/` | Admin layout only |
+
+## Module pattern (`app/(frontend)/<module>/`)
+
+Each feature gets its own folder — same pattern as `about`, `contact`, `github`:
+
+```
+app/(frontend)/<module>/
+  page.tsx              # thin route (often HashRedirect to /#section)
+  components/           # module UI
+    <module>-content.tsx    # composer for home scroll sections
+    <module>-section.tsx    # main section UI
+    forms/                  # form UI (if needed)
+    schema/                 # zod schemas (if needed)
+  lib/                  # types, mock data, API helpers
+  actions/              # server actions (optional)
+```
+
+### Examples in this repo
+
+```
+about/
+  components/about-content.tsx, about-intro.tsx, education-timeline.tsx, social-links.tsx
+  lib/education.ts, socials.ts
+  page.tsx → redirects to /#about
+
+github/
+  components/github-content.tsx, github-section.tsx, github-section-loader.tsx
+  lib/github.ts, github-api.ts
+  page.tsx → full page at /github
+
+contact/
+  components/contact-section.tsx, contact-channels.tsx, forms/contact-form.tsx
+  lib/contact-channels.ts
+  page.tsx → redirects to /#contact
+
+projects/
+  components/project-grid.tsx, project-card.tsx
+  lib/mock-projects.ts
+  page.tsx → full page at /projects
+
+blog/
+  components/blog-list.tsx, blog-card.tsx
+  lib/mock-posts.ts
+  page.tsx → full page at /blog
+```
+
+## Home scroll sections
+
+Single-page sections on `/` compose module content inside `components/home/home-page-sections.tsx`:
+
+```tsx
+<section id="about"><AboutContent /></section>
+<section id="contact"><ContactSection /></section>
+```
+
+Nav hash links: `/#about`, `/#contact`. Full routes: `/github`, `/projects`, `/blog`.
+
+## Naming
+
+- **Files & folders**: `kebab-case` — `github-section.tsx`, `contact-form.tsx`
+- **Variables, props, functions**: `camelCase`
+- **Types / interfaces**: `PascalCase`
+- **React components**: PascalCase export, kebab-case file — `export function GithubSection`
+
+## Imports
+
+- Module code: `@/app/(frontend)/<module>/...`
+- Global UI: `@/components/ui/*`, `@/components/magicui/*`
+- Site config: `@/lib/nav-links`
+- Never put feature UI in `components/ui/`
+
+## Server vs client
+
+- `lib/*-api.ts` — server fetch helpers (no `"use client"`)
+- `*-loader.tsx` — async server component that fetches and passes props
+- `*-section.tsx` — `"use client"` when using motion/interactivity
+- Wrap async loaders in `<Suspense>` from a server parent (`*-content.tsx`)
+
+## Do / Don't
+
+```tsx
+// ❌ Feature API inside about/ for github data
+// app/(frontend)/about/lib/github-api.ts
+
+// ✅ Own module folder
+// app/(frontend)/github/lib/github-api.ts
+// app/(frontend)/github/components/github-content.tsx
+```

@@ -1,0 +1,53 @@
+---
+description: Design system — theme tokens from globals.css, shadcn-first UI, Motion animations
+alwaysApply: true
+---
+
+# Design system
+
+Source of truth for colors/fonts/radius/shadows: `app/globals.css`. Do not invent a parallel palette.
+
+## Theme & color
+
+Use **semantic Tailwind tokens** only — never raw hex/rgb/oklch in components.
+
+| Role        | Classes                                                                                         |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| Surfaces    | `bg-background`, `bg-card`, `bg-popover`, `bg-muted`, `bg-accent`, `bg-sidebar`                 |
+| Text        | `text-foreground`, `text-muted-foreground`, `text-primary-foreground`, `text-accent-foreground` |
+| Brand / CTA | `bg-primary`, `text-primary`, `border-primary`                                                  |
+| Secondary   | `bg-secondary`, `text-secondary-foreground`                                                     |
+| Danger      | `bg-destructive`, `text-destructive`                                                            |
+| Chrome      | `border-border`, `bg-input`, `ring-ring`, `outline-ring`                                        |
+| Charts      | `bg-chart-1` … `bg-chart-5` (data viz only)                                                     |
+
+- Support light (`:root`) and dark (`.dark`) via tokens — no manual `dark:bg-*` color overrides.
+- Fonts: `font-sans` / `font-serif` (Poppins), `font-mono` (IBM Plex Mono). Tracking from theme (`tracking-normal`, etc.).
+- Radius: `rounded-sm|md|lg|xl` (from `--radius: 1.1rem`). Shadows: `shadow-xs` … `shadow-2xl`.
+- Layout classes (`flex`, `gap-*`, `p-*`) are fine; do not override component colors/typography with one-off utilities.
+
+```tsx
+// ❌ BAD
+<div className="bg-[#7c3aed] text-white rounded-[18px]" />
+
+// ✅ GOOD
+<div className="bg-primary text-primary-foreground rounded-lg" />
+```
+
+## Always use shadcn
+
+- Prefer `@/components/ui/*` before custom markup (Button, Card, Input, Field, Dialog, etc.).
+- Add missing primitives with `npx shadcn@latest add <component>` — do not reimplement.
+- Compose features from shadcn; put feature UI in `features/<module>/`, shared in `components/ui/`.
+- Use built-in `variant` / `size` before custom `className` styling.
+
+## Motion (`framer-motion`)
+
+Use Framer Motion for presence and hierarchy (enter/exit, staggered lists, hover/tap):
+
+```tsx
+import { motion, AnimatePresence } from "framer-motion"
+```
+
+- Prefer 2–3 intentional motions per view; avoid noisy perpetual animation.
+- Animate opacity/transform; keep durations short (~0.2–0.4s); respect reduced motion when practical.
