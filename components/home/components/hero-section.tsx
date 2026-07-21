@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PixelImage } from "@/components/magicui/pixel-image";
 import { TypingAnimation } from "@/components/magicui/typing-animation";
 import { siteBrand } from "@/lib/nav-links";
+import { TechStackBeam } from "./techstack-beam";
 
 export function HeroSection() {
   return (
@@ -115,7 +116,8 @@ export function HeroSection() {
           transition={{ duration: 0.45, delay: 0.12 }}
           className="flex w-full justify-center lg:justify-end"
         >
-          <PixelImage src="/profile.png" grid="8x8" grayscaleAnimation />
+          {/* <PixelImage src="/profile.png" grid="8x8" grayscaleAnimation /> */}
+          <TechStackBeam />
         </motion.div>
       </div>
     </section>
